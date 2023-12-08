@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+<br />
+<h1 align="center"> Логин - {{ user.email }}</h1>
+<h1 align="center"> Имя аккаунта - {{ user.firstName }} </h1>
+<h1 align="center"> Id пользователя - {{ user.id }} </h1>
+<h1 align="center"> Тип аккаунта- {{ user.roles[0].name }} </h1>
+
+<br />
+
+
+{% endblock %}
