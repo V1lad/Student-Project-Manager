@@ -30,8 +30,17 @@ def redactProject(index):
     
     project = Project.query.filter_by(id=index).first()
     
+    if not project:
+        return redirect(url_for('allProjects'))
+    
+    allowed_users = json.loads(project.allowedUsers)
+    print(allowed_users)
+    
     if delete_word == "УДАЛИТЬ":
-        project.delete()
+        db.session.delete(project)
+        db.session.commit()
+        return redirect(url_for('projects.allProjects'))
+    
     if name:
         project.name = name
     elif fullDescription:
@@ -43,7 +52,7 @@ def redactProject(index):
     
     db.session.commit()
     
-    return render_template("redact_project.html", project=project, user=current_user)
+    return render_template("redact_project.html", project=project, user=current_user, allowed_users=allowed_users)
 
 @projects.route('/new_project', methods=["GET", "POST"])
 @login_required
@@ -61,7 +70,7 @@ def newProject():
         db.session.add(new_project)
         db.session.commit()
         
-        return render_template("projects.html", user=current_user)
+        return redirect(url_for('projects.allProjects'))
 
 @projects.route('/projects/<int:index>', methods=["GET", "POST"])
 @login_required

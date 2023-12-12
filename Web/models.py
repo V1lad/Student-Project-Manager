@@ -10,7 +10,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     status = db.Column(db.String(16))
     ownedProjects = db.relationship('Project')
-    sharedProjects = db.Column(db.String(16))
+
 
 class Project(db.Model, UserMixin):
     __tablename__ = 'projects'
@@ -20,16 +20,12 @@ class Project(db.Model, UserMixin):
     owner = db.relationship("User")
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     
-    name = db.Column(db.String(150))
-    shortDescription = db.Column(db.String(255))
-    fullDescription = db.Column(db.String(255))
-    goal = db.Column(db.String(255))
+    name = db.Column(db.String(150), default='')
+    shortDescription = db.Column(db.String(255), default='')
+    fullDescription = db.Column(db.String(255), default='')
+    goal = db.Column(db.String(255), default='')
     
-    allowedUsers = db.Column(db.JSON)
+    allowedUsers = db.Column(db.JSON, default='[]')
     
-    isArchived = db.Column(db.Boolean)
-    isPublic = db.Column(db.Boolean)
     
-    def delete(self):
-        pass
     

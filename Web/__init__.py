@@ -39,10 +39,6 @@ def create_app():
     def load_user(id):
         return User.query.get(int(id))
 
-    def loadsJSON(js):
-        return loads(js)
-
-    app.jinja_env.globals.update(clever_function=loadsJSON)
     
     return app
 
