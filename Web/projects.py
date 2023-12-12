@@ -18,11 +18,12 @@ def allProjects():
     
     return render_template("projects.html", user=current_user, available_projects = projects)
 
-@projects.route('/projects', methods=["GET"])
+@projects.route('/projects/<int:index>/redact', methods=["POST"])
 @login_required
-def redactProject():
+def redactProject(index):
     # Везде добавить проверку на то, что заходит владелец или человек с доступом! Функция HasAccess?
-    return render_template("redactProject.html", user=current_user)
+    project = Project.query.filter_by(id=index).first()
+    return render_template("redact_project.html", project=project, user=current_user)
 
 @projects.route('/new_project', methods=["GET", "POST"])
 @login_required

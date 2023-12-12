@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Проект{% endblock %}
+{% block content %}
+<h1> Название проекта:   </h1>
+<form method="POST">
+    <div class="form-group">
+        <textarea
+                type="text"
+                class="form-control"
+                id="name"
+                name="name"
+        >{{ project.name }}</textarea>
+        </br>
+        <button type="submit" class="btn btn-primary">Применить изменения</button>
+ </div>
+</form>
+<h2> Краткое описание проекта:   </h2>
+<form method="POST">
+    <div class="form-group">
+        <textarea
+                type="text"
+                class="form-control"
+                id="fullDescription"
+                name="fullDescription"
+        >{{ project.shortDescription }}</textarea>
+        </br>
+        <button type="submit" class="btn btn-primary">Применить изменения</button>
+ </div>
+</form>
+
+<h2> Описание проекта:   </h2>
+<form method="POST">
+    <div class="form-group">
+        <textarea
+                type="text"
+                class="form-control"
+                id="fullDescription"
+                name="fullDescription"
+        >{{ project.fullDescription }}</textarea>
+        </br>
+        <button type="submit" class="btn btn-primary">Применить изменения</button>
+ </div>
+</form>
+
+<h2> Цель проекта:   </h2>
+<form method="POST">
+    <div class="form-group">
+        <textarea
+                type="text"
+                class="form-control"
+                id="goal"
+                name="goal"
+        >{{ "Пусто" }}</textarea>
+        </br>
+        <button type="submit" class="btn btn-primary">Применить изменения</button>
+ </div>
+</form>
+
+<form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
+    <input type="hidden" name="project" value="{{ project.id }}" />
+    <button type="submit" class="btn btn-primary">Вернутся к проекту</button>
+    <br/>
+</form>
+
+{% endblock %}
