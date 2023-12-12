@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
 from flask_authorize import Authorize
+from json import loads
 db = SQLAlchemy()
 DB_NAME = "database.db"
 
@@ -17,9 +18,11 @@ def create_app():
 
     from .views import views
     from .auth import auth
-
+    from .projects import projects
+    
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
+    app.register_blueprint(projects, url_prefix='/')
 
 
     from .models import User
@@ -36,6 +39,11 @@ def create_app():
     def load_user(id):
         return User.query.get(int(id))
 
+    def loadsJSON(js):
+        return loads(js)
+
+    app.jinja_env.globals.update(clever_function=loadsJSON)
+    
     return app
 
 

@@ -16,7 +16,7 @@ class Project(db.Model, UserMixin):
     __tablename__ = 'projects'
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    ownerId = db.Column(db.Integer, unique=True)
+    ownerId = db.Column(db.Integer)
     name = db.Column(db.String(150))
     shortDescription = db.Column(db.String(255))
     fullDescription = db.Column(db.String(255))

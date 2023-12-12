@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Проект{% endblock %}
+{% block content %}
+<h1> Название проекта: {{ project.name }}  </h1>
+<h2> Краткое описание проекта: {{ project.shortDescription }}  </h2>
+<h2> Описание проекта: {{ project.fullDescription }}  </h2>
+<h2> Цель проекта: {{ "Пусто" }}  </h2>
+<form action = {{ url_for('.redactProject', index=project.id) }} method = "POST">
+    <input type="hidden" name="project" value="{{ project.id }}" />
+    <button type="submit" class="btn btn-primary">Редактировать информацию о проекте</button>
+    <br/>
+</form>
+<h2> Напоминания: {{ "Пусто" }}  </h2>
+<h1> Содержание: </h1>
+
+<form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
+    <input type="hidden" name="project" value="{{ project.id }}" />
+    <button type="submit" class="btn btn-primary">Создать запись</button>
+</form>
+        
+<form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
+    <input type="hidden" name="project" value="{{ project.id }}" />
+    <button type="submit" class="btn btn-primary">Создать TODO</button>
+</form>
+
+<form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
+    <input type="hidden" name="project" value="{{ project.id }}" />
+    <button type="submit" class="btn btn-primary">Создать раздел</button>
+    <br/>
+</form>
+{% endblock %}

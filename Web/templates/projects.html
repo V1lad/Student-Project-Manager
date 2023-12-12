@@ -2,19 +2,15 @@
 
 {% block title %}Доступные проекты{% endblock %}
 {% block content %}
-
+<h1> Ваши проекты  </h1>
 {% for project in available_projects %}
 
     <h1>{{ project.name }} </h1>
-        {{"Количество вопросов - "}}
-        {{ task.questions|length }}</br>
-        {{ "Дата окончания - " }}
-        {{ task.ending_time.split("T")[0] }}<br/>
-        {{ "Время окончания" }}
-        {{ task.ending_time.split("T")[1] }}
-        <form method = "POST">
-        <input type="hidden" name="task" value="{{ task.id }}" />
-        <button type="submit" class="btn btn-primary">Пройти</button>
+        {{ project.shortDescription}} </br>
+
+        <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
+        <input type="hidden" name="project" value="{{ project.id }}" />
+        <button type="submit" class="btn btn-primary">Открыть</button>
         <br/>
     </form>
 

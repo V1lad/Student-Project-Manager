@@ -2,16 +2,53 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from . import db
 from flask_login import login_required, current_user
 from datetime import datetime
-from models import Project
+from .models import Project
+import json
 
-testing = Blueprint('projects', __name__)
+projects = Blueprint('projects', __name__)
 
-@testing.route('/projects', methods=["GET"])
+@projects.route('/projects', methods=["GET"])
 @login_required
-def projects():
-    projects = Project.query.first()
-    project = Project(ownerId=current_user.id, firstName=firstName, password=password1, status="inactive")
+def allProjects():
+    
+    #info = json.dumps({"KEY1":[1,2,3,4,5], "KEY2":3})
+    #project = Project(ownerId=current_user.id, name="test", allowedUsers = info, shortDescription = "1", fullDescription = "2")
+    projects = Project.query.all()
+    
+    
     return render_template("projects.html", user=current_user, available_projects = projects)
+
+@projects.route('/projects', methods=["GET"])
+@login_required
+def redactProject():
+    # Везде добавить проверку на то, что заходит владелец или человек с доступом! Функция HasAccess?
+    return render_template("redactProject.html", user=current_user)
+
+@projects.route('/new_project', methods=["GET", "POST"])
+@login_required
+def newProject():
+    if request.method == "GET":
+        return render_template("new_project.html", user=current_user)
+    
+    elif request.method == "POST":
+        name = request.form.get('name')
+        shortDescription = request.form.get('shortDescription')
+
+        # Надо добавить OwnerID
+        new_project = Project(name=name, shortDescription=shortDescription)
+        
+        db.session.add(new_project)
+        db.session.commit()
+        
+        return render_template("projects.html", user=current_user)
+
+@projects.route('/projects/<int:index>', methods=["GET", "POST"])
+@login_required
+def showProject(index):
+    # Надо сделать проверку на доступ к проекту.
+    
+    project = Project.query.filter_by(id=index).first()
+    return render_template("show_project.html", project=project, user=current_user )
 
 '''
 @testing.route('/testing', methods=["POST", "GET"])
