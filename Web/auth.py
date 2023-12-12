@@ -40,8 +40,6 @@ def sign_up():
         firstName = request.form.get('firstName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
-        auth__level = request.form.get('auth__level')
-        code = request.form.get('code')
 
         user = User.query.filter_by(email=email).first()
 
@@ -55,15 +53,8 @@ def sign_up():
             flash("Пароли не совпадают", category="error")
         elif len(password1) < 7:
             flash("Пароль должен быть длиннее 7 символов", category="error")
-        elif not(auth__level != "admin" or auth__level != "teacher" or auth__level != "admin_sys" or auth__level != "admin_teach"):
-            flash("Неверно указана роль аккаунта", category="error")
-        elif auth__level == "admin_sys" and code != "admincodetmp":
-            flash("Неверный код для админа", category="error")
         else:
-            if auth__level == "admin_sys":
-                new_user = User(email=email, firstName=firstName, password=password1, status="active")
-            else:
-                new_user = User(email=email, firstName=firstName, password=password1, status="inactive")
+            new_user = User(email=email, firstName=firstName, password=password1, status="inactive")
 
             db.session.add(new_user)
             db.session.commit()
