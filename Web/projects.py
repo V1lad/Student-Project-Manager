@@ -22,7 +22,27 @@ def allProjects():
 @login_required
 def redactProject(index):
     # Везде добавить проверку на то, что заходит владелец или человек с доступом! Функция HasAccess?
+    name = request.form.get('name')
+    shortDescription = request.form.get('shortDescription')
+    fullDescription = request.form.get('fullDescription')
+    goal = request.form.get('goal')
+    delete_word = request.form.get('delete')
+    
     project = Project.query.filter_by(id=index).first()
+    
+    if delete_word == "УДАЛИТЬ":
+        project.delete()
+    if name:
+        project.name = name
+    elif fullDescription:
+        project.fullDescription = fullDescription
+    elif shortDescription:
+        project.shortDescription = shortDescription
+    elif goal:
+        project.goal = goal
+    
+    db.session.commit()
+    
     return render_template("redact_project.html", project=project, user=current_user)
 
 @projects.route('/new_project', methods=["GET", "POST"])

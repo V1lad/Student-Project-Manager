@@ -2,18 +2,18 @@
 
 {% block title %}Доступные проекты{% endblock %}
 {% block content %}
-<h1> Ваши проекты  </h1>
+<h1 align="center"> Ваши проекты  </h1>
 {% for project in available_projects %}
-
+<li class="list-group-item">
     <h1>{{ project.name }} </h1>
         {{ project.shortDescription}} </br>
 
         <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
         <input type="hidden" name="project" value="{{ project.id }}" />
-        <button type="submit" class="btn btn-primary">Открыть</button>
+        <button  type="submit" class="btn btn-primary">Открыть</button>
         <br/>
     </form>
-
+</li>
 {% endfor %}
 
 {% endblock %}

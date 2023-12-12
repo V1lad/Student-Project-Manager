@@ -2,17 +2,17 @@
 
 {% block title %}Проект{% endblock %}
 {% block content %}
-<h1> Название проекта: {{ project.name }}  </h1>
-<h2> Краткое описание проекта: {{ project.shortDescription }}  </h2>
-<h2> Описание проекта: {{ project.fullDescription }}  </h2>
-<h2> Цель проекта: {{ "Пусто" }}  </h2>
+<h3> Название проекта:  </h3><span>{{ project.name }} </span> </br> </br>
+<h3> Краткое описание проекта:  </h3><span>{{ project.shortDescription }} </span> </br> </br>
+<h3> Описание проекта:  </h3><span>{{ project.fullDescription }}  </span> </br> </br>
+<h3> Цель проекта:  </h3><span>{{ project.goal }}   </span> </br> </br>
 <form action = {{ url_for('.redactProject', index=project.id) }} method = "POST">
     <input type="hidden" name="project" value="{{ project.id }}" />
     <button type="submit" class="btn btn-primary">Редактировать информацию о проекте</button>
     <br/>
 </form>
-<h2> Напоминания: {{ "Пусто" }}  </h2>
-<h1> Содержание: </h1>
+<h3> Напоминания: {{ "Пусто" }}  </h3>
+<h2> Содержание: </h2>
 
 <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
     <input type="hidden" name="project" value="{{ project.id }}" />

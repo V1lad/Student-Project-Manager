@@ -30,4 +30,6 @@ class Project(db.Model, UserMixin):
     isArchived = db.Column(db.Boolean)
     isPublic = db.Column(db.Boolean)
     
+    def delete(self):
+        pass
     

@@ -2,6 +2,9 @@
 
 {% block title %}Проект{% endblock %}
 {% block content %}
+<div class="container" id='sign-up-container'>
+    <div class="row pt-4 mt-4 mb-4">
+        <div class="col-8">
 <h1> Название проекта:   </h1>
 <form method="POST">
     <div class="form-group">
@@ -21,8 +24,8 @@
         <textarea
                 type="text"
                 class="form-control"
-                id="fullDescription"
-                name="fullDescription"
+                id="shortDescription"
+                name="shortDescription"
         >{{ project.shortDescription }}</textarea>
         </br>
         <button type="submit" class="btn btn-primary">Применить изменения</button>
@@ -51,7 +54,7 @@
                 class="form-control"
                 id="goal"
                 name="goal"
-        >{{ "Пусто" }}</textarea>
+        >{{ project.goal }}</textarea>
         </br>
         <button type="submit" class="btn btn-primary">Применить изменения</button>
  </div>
@@ -62,5 +65,35 @@
     <button type="submit" class="btn btn-primary">Вернутся к проекту</button>
     <br/>
 </form>
+</div>
+<div class="col-4">
+<h2> Удаление проекта   </h2>
+<form method="POST">
+    <div class="form-group">
+        <input
+                type="text"
+                class="form-control"
+                id="delete"
+                name="delete"
+                placeholder="Введите УДАЛИТЬ чтобы удалить проект"
+        ></input>
+        </br>
+        <button type="submit" class="btn btn-primary">Удалить проект</button>
+    </div>
+</form>
+<h2> Добавление и удаления соучастников   </h2>
+<form method="POST">
+    <div class="form-group">
+        <textarea
+                type="text"
+                class="form-control"
+                id="state"
+                name="state"
+        >{{ project.state }}</textarea>
+        </br>
+        <button type="submit" class="btn btn-primary">Применить изменения</button>
+    </div>
+</form>
+</div>
 
 {% endblock %}
