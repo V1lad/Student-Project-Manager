@@ -27,6 +27,11 @@ def redactProject(index):
     fullDescription = request.form.get('fullDescription')
     goal = request.form.get('goal')
     delete_word = request.form.get('delete')
+    user_id = request.form.get('user_id')
+    to_delete_user_id = request.form.get('to_delete_user_id')
+    
+    print(user_id)
+    print(to_delete_user_id)
     
     project = Project.query.filter_by(id=index).first()
     
@@ -34,8 +39,7 @@ def redactProject(index):
         return redirect(url_for('allProjects'))
     
     allowed_users = json.loads(project.allowedUsers)
-    print(allowed_users)
-    
+
     if delete_word == "УДАЛИТЬ":
         db.session.delete(project)
         db.session.commit()
@@ -49,7 +53,11 @@ def redactProject(index):
         project.shortDescription = shortDescription
     elif goal:
         project.goal = goal
-    
+    elif user_id:
+        # Надо сделать проверку на повторение и на существование пользователя
+        allowed_users.append(user_id)
+        project.allowedUsers = json.dumps(allowed_users)
+
     db.session.commit()
     
     return render_template("redact_project.html", project=project, user=current_user, allowed_users=allowed_users)

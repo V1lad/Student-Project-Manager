@@ -84,14 +84,23 @@
 <h2> Добавление и удаления соучастников   </h2>
 <form method="POST">
     <div class="form-group">
-        <textarea
+        {% for allowed_user in allowed_users %}
+        <li class="list-group-item"> Имя: {{ allowed_user.name }} <br/> 
+             id: {{ allowed_user.id }}
+            <button type="submit" class="close">
+  
+            </button>
+        </li>
+        {% endfor %}
+        </br>
+        <input
                 type="text"
                 class="form-control"
-                id="state"
-                name="state"
-        >{{ project.state }}</textarea>
-        </br>
-        <button type="submit" class="btn btn-primary">Применить изменения</button>
+                id="user_id"
+                name="user_id"
+                placeholder="Введите ID пользователя"
+        ></input></br>
+        <button type="submit" class="btn btn-primary">Добавить</button>
     </div>
 </form>
 </div>
