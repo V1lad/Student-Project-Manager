@@ -65,35 +65,10 @@ def sign_up():
             else:
                 new_user = User(email=email, firstName=firstName, password=password1, status="inactive")
 
-            if auth__level == "teacher":
-                teacher = Role(name='teacher')
-                curr_role = teacher
-
-            elif auth__level == "admin_sys":
-                flag = True
-                for i in User.query.all():
-                    if i.roles[0].name == "admin_sys":
-                        flag = False
-                if flag:
-                    admin_sys = Role(name="admin_sys")
-                    curr_role = admin_sys
-                else:
-                    admin_sys = Role(name="admin_sys")
-                    curr_role = admin_sys
-                    new_user.status = "inactive"
-
-            elif auth__level == "admin_teach":
-                admin_teach = Role(name="admin_teach")
-                curr_role = admin_teach
-
-            else:
-                student = Role(name='student')
-                curr_role = student
-
-            new_user.roles = [curr_role]
             db.session.add(new_user)
             db.session.commit()
 
             flash("Аккаунт создан", category="success")
             return redirect(url_for('auth.login'))
+        
     return render_template("sign_up.html", user=current_user)
