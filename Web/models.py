@@ -50,5 +50,5 @@ class Note(db.Model, UserMixin):
     
     content = db.Column(db.String, default='')
     type = db.Column(db.String, default='')
-    done = db.Column(db.String, default='')
+    done = db.Column(db.Boolean, default=False)
     

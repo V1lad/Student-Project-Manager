@@ -7,14 +7,28 @@
     <li class="list-group-item">
         <form method="POST">
             <div class="form-group">
-                <textarea
+                <div {% if note.done %}style="text-decoration:line-through"{% endif %}><textarea
                         type="text"
                         class="form-control border-0"
                         id="content"
                         name="content"
                 >{{ note.content }}</textarea>
+                </div>
                 </br>
-                <button type="submit" class="btn btn-primary btn-sm">Применить изменения</button>
+                <input type="hidden" name="content_id" value="{{ note.id }}" />
+                <button type="submit" class="btn btn-outline-dark btn-sm">Сохранить</button>
+            </div>
+        </form>
+        <form method="POST">
+            <div class="form-group">
+                <input type="hidden" name="delete" value="{{ note.id }}" />
+                <button type="submit" class="btn btn-outline-dark btn-sm">Удалить</button>
+            </div>
+        </form>
+        <form method="POST">
+            <div class="form-group">
+                <input type="hidden" name="complete" value="{{ note.id }}" />
+                <button type="submit" class="btn btn-outline-dark btn-sm">Выполнить</button>
             </div>
         </form>
     </li>

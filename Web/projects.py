@@ -155,15 +155,32 @@ def redactSubProject(index, subproject):
 @login_required
 def showSubProject(index, subproject):
     if request.method == "POST":
-        content = request.form.get('create_note')
-        delete_word = request.form.get('delete')
+        create_note = request.form.get('create_note')
+        content = request.form.get('content')
+        content_id = request.form.get('content_id')
+        delete = request.form.get('delete')
+        complete = request.form.get('complete')
         
         project = Project.query.filter_by(id=index).first()
         subproject = SubProject.query.filter_by(id=subproject).first()
         
-        if content:
+        if create_note:
             note = Note(parent_id=subproject.id, content=content)
             db.session.add(note)
-        
+            
+        elif delete:
+            note = Note.query.filter_by(id=int(delete)).first()
+            db.session.delete(note)
+
+        elif complete:   
+            note = Note.query.filter_by(id=int(complete)).first()
+            print("09000", note.done)
+            note.done = True
+            print("1111", note.done)
+            
+        elif content_id:
+            note = Note.query.filter_by(id=int(content_id)).first()
+            note.content = content
+            
         db.session.commit()
         return render_template("show_subproject.html", project=project, user=current_user, subproject=subproject)
