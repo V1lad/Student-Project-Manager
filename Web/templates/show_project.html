@@ -16,24 +16,19 @@
 <ul class="list-group">
 {% for subproject in subprojects %}
     <div class="list-group-item">
-    <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
-        <input type="text" class="form-control mb-3 border-0" name="to_create_subproject_name" value={{subproject.name}} />
-        <button type="submit" class="btn btn-primary btn-sm">Применить</button>
-        <br/>
-    </form>
-    <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
-        <input type="text" class="form-control mb-3 border-0" name="to_redact_text" placeholder="Краткое описание" />
-        <input type="hidden" name="to_redact_subproject_id" value="{{ subproject.id }}" />
-        <button type="submit" class="btn btn-primary btn-sm">Применить</button>
-        <br/>
-    </form>
-    <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
-        <input type="text" class="form-control mb-3 border-0" name="to_delete_word" placeholder="Введите УДАЛИТЬ для подтверждения" />
-        <input type="hidden" name="to_delete_subproject_id" value="{{ subproject.id }}" />
-        <button type="submit" class="btn btn-primary btn-sm">Удалить</button>
-        <br/>
-    </form>
-</div>
+        <h3>{{subproject.name}}</h3>
+        <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
+            <input type="hidden" name="to_redact_subproject_id" value="{{ subproject.id }}" />
+            <button type="submit" class="btn btn-primary btn-sm mb-3">Открыть</button>
+        </form>
+        <form action = {{ url_for('.redactSubProject', index=project.id, subproject=subproject.id) }} method = "POST">
+            
+            <input type="hidden" name="to_redact_subproject_id" value="{{ subproject.id }}" />
+            <button type="submit" class="btn btn-primary btn-sm">Редактировать</button>
+            <br/>
+        </form>
+
+    </div>
 {% endfor %}
 <li class="list-group-item">
 <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
