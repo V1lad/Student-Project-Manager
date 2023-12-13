@@ -14,8 +14,3 @@ def has_access_to_project(user, project):
         else:
             return False
         
-def has_access_to_subproject(user, subproject):
-    return has_access_to_subproject(user=user, subproject=Project.query.filter_by(id=subproject.parent_id).first())
-        
-def has_access_to_note(user, note):
-    return has_access_to_subproject(user=user, subproject=SubProject.query.filter_by(id=note.parent_id).first())

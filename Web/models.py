@@ -28,6 +28,12 @@ class Project(db.Model):
     allowedUsers = db.Column(db.JSON, default='[]')
     subprojects = db.relationship('SubProject')
     
+    def delete(self, db):
+        for subproject in self.subprojects:
+            subproject.delete(self)
+        db.session.delete(self)
+        
+
 class SubProject(db.Model):
     __tablename__ = 'subprojects'
 
@@ -39,6 +45,12 @@ class SubProject(db.Model):
     shortDescription = db.Column(db.String(255), default='')
     
     notes = db.relationship('Note')
+    
+    def delete(self, db):
+        for note in self.notes:
+            note.delete(self)
+        db.session.delete(self)
+        
 
 class Note(db.Model):
     __tablename__ = 'notes'
@@ -49,4 +61,7 @@ class Note(db.Model):
     
     content = db.Column(db.String, default='')
     done = db.Column(db.String, default="True")
+    
+    def delete(self, db):
+        db.session.delete(self)
     
