@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from . import db
 from flask_login import login_required, current_user
 from .models import Project, User, SubProject, Note
-from .functions import has_access_to_note, has_access_to_project, has_access_to_subproject
+from .functions import has_access_to_project
 import json
 
 projects = Blueprint('projects', __name__)
@@ -20,7 +20,8 @@ def allProjects():
 def redactProject(index):
     project = Project.query.filter_by(id=index).first()
     if not has_access_to_project(user=current_user, project=project):
-        return redirect(url_for('allProjects'))
+        return render_template("forbidden.html", user=current_user)
+    
     name = request.form.get('name')
     shortDescription = request.form.get('shortDescription')
     fullDescription = request.form.get('fullDescription')
@@ -103,12 +104,15 @@ def newProject():
 @projects.route('/projects/<int:index>', methods=["POST"])
 @login_required
 def showProject(index):
-    # Надо сделать проверку на доступ к проекту.
     if request.method == "POST":
-        to_create_subproject_name = request.form.get('to_create_subproject_name')
-        
         
         project = Project.query.filter_by(id=index).first()
+        
+        if not has_access_to_project(user=current_user, project=project):
+            return render_template("forbidden.html", user=current_user)
+    
+        to_create_subproject_name = request.form.get('to_create_subproject_name')
+        
         subprojects = project.subprojects
         
         # Предотвращаем повторное создание ПОКА НЕТ
@@ -126,11 +130,17 @@ def showProject(index):
 @login_required
 def redactSubProject(index, subproject):
     if request.method == "POST":
+        
+        project = Project.query.filter_by(id=index).first()
+        
+        if not has_access_to_project(user=current_user, project=project):
+            return render_template("forbidden.html", user=current_user)
+        
         name = request.form.get('name')
         description = request.form.get('description')
         delete_word = request.form.get('delete')
         
-        project = Project.query.filter_by(id=index).first()
+        
     
         
         subproject = SubProject.query.filter_by(id=subproject).first()
@@ -152,13 +162,18 @@ def redactSubProject(index, subproject):
 @login_required
 def showSubProject(index, subproject):
     if request.method == "POST":
+        
+        project = Project.query.filter_by(id=index).first()
+        if not has_access_to_project(user=current_user, project=project):
+            return render_template("forbidden.html", user=current_user)
+        
         create_note = request.form.get('create_note')
         content = request.form.get('content')
         content_id = request.form.get('content_id')
         delete = request.form.get('delete')
         complete = request.form.get('complete')
         
-        project = Project.query.filter_by(id=index).first()
+        
         subproject = SubProject.query.filter_by(id=subproject).first()
         
         if create_note:
@@ -184,3 +199,9 @@ def showSubProject(index, subproject):
             
         db.session.commit()
         return render_template("show_subproject.html", project=project, user=current_user, subproject=subproject)
+    
+@projects.route('/other_projects', methods=["GET"])
+@login_required
+def showOtherProjects():
+    projects = Project.query.all()
+    return render_template("other_projects.html", user=current_user, available_projects = projects)
