@@ -39,3 +39,16 @@ class SubProject(db.Model, UserMixin):
     shortDescription = db.Column(db.String(255), default='')
     content = db.Column(db.JSON, default='[]')
     
+    notes = db.relationship('Note')
+
+class Note(db.Model, UserMixin):
+    __tablename__ = 'notes'
+
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    
+    parent_id = db.Column(db.Integer, db.ForeignKey('subprojects.id'))
+    
+    content = db.Column(db.String, default='')
+    type = db.Column(db.String, default='')
+    done = db.Column(db.String, default='')
+    

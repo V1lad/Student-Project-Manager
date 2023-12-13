@@ -17,7 +17,8 @@
 {% for subproject in subprojects %}
     <div class="list-group-item">
         <h3>{{subproject.name}}</h3>
-        <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
+        <p>{{subproject.shortDescription}}</p>
+        <form action = {{ url_for('.showSubProject', index=project.id, subproject=subproject.id) }} method = "POST">
             <input type="hidden" name="to_redact_subproject_id" value="{{ subproject.id }}" />
             <button type="submit" class="btn btn-primary btn-sm mb-3">Открыть</button>
         </form>

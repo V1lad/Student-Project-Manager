@@ -153,7 +153,7 @@ def redactSubProject(index, subproject):
     
 @projects.route('/projects/<int:index>/<int:subproject>', methods=["POST"])
 @login_required
-def redactSubProject(index, subproject):
+def showSubProject(index, subproject):
     if request.method == "POST":
         project = Project.query.filter_by(id=index).first()
         subproject = SubProject.query.filter_by(id=subproject).first()
