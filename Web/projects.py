@@ -29,15 +29,15 @@ def redactProject(index):
     user_id = request.form.get('user_id')
     to_delete_user_id = request.form.get('to_delete_user_id')
     
-    print(user_id)
-    print(to_delete_user_id)
     
     project = Project.query.filter_by(id=index).first()
     
+    allowed_users_list = json.loads(project.allowedUsers)
+    allowed_users = [User.query.filter_by(id=int(i)).first() for i in allowed_users_list]
+    
     if not project:
         return redirect(url_for('allProjects'))
-    
-    allowed_users = json.loads(project.allowedUsers)
+
 
     if delete_word == "УДАЛИТЬ":
         db.session.delete(project)
@@ -52,24 +52,30 @@ def redactProject(index):
         project.shortDescription = shortDescription
     elif goal:
         project.goal = goal
+    elif to_delete_user_id:
+        print(allowed_users_list, to_delete_user_id)
+        allowed_users_list.remove(to_delete_user_id)
+        project.allowedUsers = json.dumps(allowed_users_list)
+        allowed_users.remove(User.query.filter_by(id=to_delete_user_id).first())
+        
     elif user_id:
         # Надо сделать проверку на повторение и на существование пользователя
         user_to_add = User.query.filter_by(id=user_id).first()
         if not user_to_add:
-            db.session.commit() # ВОЗМОЖНО НЕ НУЖНО
             flash("Пользователь с таким ID не найден", category="error")
             return render_template("redact_project.html", project=project, user=current_user, allowed_users=allowed_users)
         
         elif project.owner_id == user_to_add.id:
-            db.session.commit() # ВОЗМОЖНО НЕ НУЖНО
             flash("Вы не можете добавить владельца", category="error")
             return render_template("redact_project.html", project=project, user=current_user, allowed_users=allowed_users)
 
         else:
             # Проверяем, если ли уже у запрашиваемого пользователя доступ к проекту
-            if user_id not in allowed_users:
-                allowed_users.append(user_id)
-                project.allowedUsers = json.dumps(allowed_users)
+            if user_id not in allowed_users_list:
+                allowed_users_list.append(user_id)
+                added_user = User.query.filter_by(id=user_id).first()
+                allowed_users.append(added_user)
+                project.allowedUsers = json.dumps(allowed_users_list)
             else:
                 flash("Пользователю с таким ID уже предоставлен доступ", category="error")
                 

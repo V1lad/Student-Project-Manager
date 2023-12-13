@@ -10,6 +10,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     status = db.Column(db.String(16))
     ownedProjects = db.relationship('Project')
+    addedProjects = db.Column(db.JSON, default='[]')
 
 
 class Project(db.Model, UserMixin):

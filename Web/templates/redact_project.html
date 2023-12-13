@@ -82,17 +82,27 @@
     </div>
 </form>
 <h2> Добавление и удаления соучастников   </h2>
-<form method="POST">
+
     <div class="form-group">
         {% for allowed_user in allowed_users %}
-        <li class="list-group-item"> Имя: {{ allowed_user.name }} <br/> 
+        <form method="POST">
+        <li class="list-group-item"> Имя: {{ allowed_user.firstName }} <br/> 
              id: {{ allowed_user.id }}
-            <button type="submit" class="close">
-  
-            </button>
+             <input
+                type="hidden"
+                class="form-control  border-0 hidden "
+                id="to_delete_user_id"
+                name="to_delete_user_id"
+                value="{{ allowed_user.id  }}"
+        ></input>
+            <button type="submit" class="btn btn-outline-dark btn-sm">
+                    Удалить
+           </button>
         </li>
+        </form>
         {% endfor %}
         </br>
+<form method="POST">
         <input
                 type="text"
                 class="form-control"
