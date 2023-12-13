@@ -17,7 +17,6 @@ class Project(db.Model, UserMixin):
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
     
-    owner = db.relationship("User")
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     
     name = db.Column(db.String(150), default='')
