@@ -9,10 +9,14 @@ DB_NAME = "database.db"
 
 # Inital creation of an application
 def create_app():
+    basedir = path.abspath(path.dirname(__file__))
+           
     app = Flask(__name__)     # Следует изменить имя приложения. Сейчас это Web.
     with open("web/keys/secret_key.txt", "r") as file:
         app.config['SECRET_KEY'] = file.readline()
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}' # Следует Разобраться с этими настройками.
+    app.config['SQLALCHEMY_DATABASE_URI'] =\
+           'sqlite:///' + path.join(basedir, DB_NAME)
+    #app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}' # Следует Разобраться с этими настройками.
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 
