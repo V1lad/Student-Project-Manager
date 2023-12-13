@@ -50,7 +50,6 @@ def redactProject(index):
     elif goal:
         project.goal = goal
     elif to_delete_user_id:
-        print(allowed_users_list, to_delete_user_id)
         allowed_users_list.remove(to_delete_user_id)
         project.allowedUsers = json.dumps(allowed_users_list)
         allowed_users.remove(User.query.filter_by(id=to_delete_user_id).first())
@@ -106,7 +105,6 @@ def showProject(index):
         to_create_subproject_name = request.form.get('to_create_subproject_name')
         
         
-        print(to_create_subproject_name, "aaaaaaaaaaaaaa")
         project = Project.query.filter_by(id=index).first()
         subprojects = project.subprojects
         
