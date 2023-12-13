@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from . import db
 from flask_login import login_required, current_user
-from .models import Project, User
+from .models import Project, User, SubProject
 import json
 
 projects = Blueprint('projects', __name__)
@@ -105,9 +105,35 @@ def newProject():
 @login_required
 def showProject(index):
     # Надо сделать проверку на доступ к проекту.
-    
-    project = Project.query.filter_by(id=index).first()
-    return render_template("show_project.html", project=project, user=current_user )
+    if request.method == "POST":
+        to_create_subproject_name = request.form.get('to_create_subproject_name')
+        to_delete_subproject_id = request.form.get('to_delete_subproject_id')
+        to_redact_subproject_id = request.form.get('to_redact_subproject_id')
+        to_delete_word = request.form.get('to_delete_word')
+        
+        print(to_create_subproject_name, "aaaaaaaaaaaaaa")
+        print(to_delete_subproject_id, "delete")
+        project = Project.query.filter_by(id=index).first()
+        subprojects = project.subprojects
+        
+        # Предотвращаем повторное создание ПОКА НЕТ
+        
+        [print(i.name) for i in subprojects]
+        if to_create_subproject_name:
+            subproject = SubProject(name = to_create_subproject_name, parent_id = project.id)
+            db.session.add(subproject)
+            subprojects.append(subproject)
+        elif to_delete_subproject_id:
+            subproject = SubProject.query.filter_by(id=to_delete_subproject_id).first()
+            if subproject:
+                db.session.delete(subproject)
+                subprojects.remove(subproject)
+                
+        elif to_redact_subproject_id:
+            pass
+        
+        db.session.commit()
+        return render_template("show_project.html", project=project, user=current_user, subprojects=subprojects)
 
 '''
 @testing.route('/testing', methods=["POST", "GET"])

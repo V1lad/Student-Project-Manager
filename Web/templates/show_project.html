@@ -6,27 +6,41 @@
 <h3> Краткое описание проекта:  </h3><span>{{ project.shortDescription }} </span> </br> </br>
 <h3> Описание проекта:  </h3><span>{{ project.fullDescription }}  </span> </br> </br>
 <h3> Цель проекта:  </h3><span>{{ project.goal }}   </span> </br> </br>
-<form action = {{ url_for('.redactProject', index=project.id) }} method = "POST">
+<form action = {{ url_for('.redactProject', index=project.id) }} method = "POST" class="mb-5">
     <input type="hidden" name="project" value="{{ project.id }}" />
     <button type="submit" class="btn btn-primary">Редактировать информацию о проекте</button>
     <br/>
 </form>
-<h3> Напоминания: {{ "Пусто" }}  </h3>
 <h2> Содержание: </h2>
 
+<ul class="list-group">
+{% for subproject in subprojects %}
+    <div class="list-group-item">
+    <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
+        <input type="text" class="form-control mb-3 border-0" name="to_create_subproject_name" value={{subproject.name}} />
+        <button type="submit" class="btn btn-primary btn-sm">Применить</button>
+        <br/>
+    </form>
+    <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
+        <input type="text" class="form-control mb-3 border-0" name="to_redact_text" placeholder="Краткое описание" />
+        <input type="hidden" name="to_redact_subproject_id" value="{{ subproject.id }}" />
+        <button type="submit" class="btn btn-primary btn-sm">Применить</button>
+        <br/>
+    </form>
+    <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
+        <input type="text" class="form-control mb-3 border-0" name="to_delete_word" placeholder="Введите УДАЛИТЬ для подтверждения" />
+        <input type="hidden" name="to_delete_subproject_id" value="{{ subproject.id }}" />
+        <button type="submit" class="btn btn-primary btn-sm">Удалить</button>
+        <br/>
+    </form>
+</div>
+{% endfor %}
+<li class="list-group-item">
 <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
-    <input type="hidden" name="project" value="{{ project.id }}" />
-    <button type="submit" class="btn btn-primary">Создать запись</button>
-</form>
-        
-<form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
-    <input type="hidden" name="project" value="{{ project.id }}" />
-    <button type="submit" class="btn btn-primary">Создать TODO</button>
-</form>
-
-<form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
-    <input type="hidden" name="project" value="{{ project.id }}" />
-    <button type="submit" class="btn btn-primary">Создать раздел</button>
+    <input type="text" class="form-control mb-3" name="to_create_subproject_name" placeholder="Название раздела" />
+    <button type="submit" class="btn btn-primary btn-sm">Создать раздел</button>
     <br/>
 </form>
+</li>
+<ul>
 {% endblock %}

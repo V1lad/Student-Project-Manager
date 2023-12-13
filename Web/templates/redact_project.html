@@ -82,7 +82,7 @@
     </div>
 </form>
 <h2> Добавление и удаления соучастников   </h2>
-
+<ul class="list-group">
     <div class="form-group">
         {% for allowed_user in allowed_users %}
         <form method="POST">
@@ -102,6 +102,7 @@
         </form>
         {% endfor %}
         </br>
+    </ul>
 <form method="POST">
         <input
                 type="text"

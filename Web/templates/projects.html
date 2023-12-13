@@ -4,6 +4,7 @@
 {% block content %}
 <h1 align="center"> Ваши проекты  </h1>
 {% for project in available_projects %}
+<ul class="list-group">
 <li class="list-group-item">
     <h1>{{ project.name }} </h1>
         {{ project.shortDescription}} </br>
@@ -14,6 +15,7 @@
         <br/>
     </form>
 </li>
+</ul>
 {% endfor %}
 
 {% endblock %}
