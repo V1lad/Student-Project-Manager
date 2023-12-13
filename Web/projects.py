@@ -66,9 +66,13 @@ def redactProject(index):
             return render_template("redact_project.html", project=project, user=current_user, allowed_users=allowed_users)
 
         else:
-            allowed_users.append(user_id)
-            project.allowedUsers = json.dumps(allowed_users)
-
+            # Проверяем, если ли уже у запрашиваемого пользователя доступ к проекту
+            if user_id not in allowed_users:
+                allowed_users.append(user_id)
+                project.allowedUsers = json.dumps(allowed_users)
+            else:
+                flash("Пользователю с таким ID уже предоставлен доступ", category="error")
+                
     db.session.commit()
     
     return render_template("redact_project.html", project=project, user=current_user, allowed_users=allowed_users)
@@ -84,7 +88,7 @@ def newProject():
         shortDescription = request.form.get('shortDescription')
 
         # Надо добавить OwnerID
-        new_project = Project(name=name, shortDescription=shortDescription)
+        new_project = Project(name=name, shortDescription=shortDescription, owner_id=current_user.id)
         
         db.session.add(new_project)
         db.session.commit()
