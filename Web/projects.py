@@ -41,7 +41,7 @@ def redactProject(index):
 
 
     if delete_word == "УДАЛИТЬ":
-        db.session.delete(project)
+        project.delete(db)
         db.session.commit()
         return redirect(url_for('projects.allProjects'))
     
@@ -146,7 +146,7 @@ def redactSubProject(index, subproject):
         subproject = SubProject.query.filter_by(id=subproject).first()
         
         if delete_word == "УДАЛИТЬ":
-            db.session.delete(subproject)
+            subproject.delete(db)
             db.session.commit()
             return redirect(url_for('projects.allProjects'))
         
@@ -182,7 +182,7 @@ def showSubProject(index, subproject):
             
         elif delete:
             note = Note.query.filter_by(id=int(delete)).first()
-            db.session.delete(note)
+            note.delete(db)
 
         elif complete:   
             note = Note.query.filter_by(id=int(complete)).first()

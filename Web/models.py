@@ -30,7 +30,7 @@ class Project(db.Model):
     
     def delete(self, db):
         for subproject in self.subprojects:
-            subproject.delete(self)
+            subproject.delete(db)
         db.session.delete(self)
         
 
@@ -48,7 +48,7 @@ class SubProject(db.Model):
     
     def delete(self, db):
         for note in self.notes:
-            note.delete(self)
+            note.delete(db)
         db.session.delete(self)
         
 
