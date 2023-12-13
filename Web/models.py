@@ -26,6 +26,16 @@ class Project(db.Model, UserMixin):
     goal = db.Column(db.String(255), default='')
     
     allowedUsers = db.Column(db.JSON, default='[]')
+    subprojects = db.relationship('SubProject')
     
+class SubProject(db.Model, UserMixin):
+    __tablename__ = 'subprojects'
+
+    id = db.Column(db.Integer, primary_key=True, unique=True)
     
+    parent_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
+    
+    name = db.Column(db.String(150), default='')
+    shortDescription = db.Column(db.String(255), default='')
+    content = db.Column(db.JSON, default='[]')
     
