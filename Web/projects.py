@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from . import db
 from flask_login import login_required, current_user
-from datetime import datetime
-from .models import Project
+from .models import Project, User
 import json
 
 projects = Blueprint('projects', __name__)
@@ -55,8 +54,20 @@ def redactProject(index):
         project.goal = goal
     elif user_id:
         # Надо сделать проверку на повторение и на существование пользователя
-        allowed_users.append(user_id)
-        project.allowedUsers = json.dumps(allowed_users)
+        user_to_add = User.query.filter_by(id=user_id).first()
+        if not user_to_add:
+            db.session.commit() # ВОЗМОЖНО НЕ НУЖНО
+            flash("Пользователь с таким ID не найден", category="error")
+            return render_template("redact_project.html", project=project, user=current_user, allowed_users=allowed_users)
+        
+        elif project.owner_id == user_to_add.id:
+            db.session.commit() # ВОЗМОЖНО НЕ НУЖНО
+            flash("Вы не можете добавить владельца", category="error")
+            return render_template("redact_project.html", project=project, user=current_user, allowed_users=allowed_users)
+
+        else:
+            allowed_users.append(user_id)
+            project.allowedUsers = json.dumps(allowed_users)
 
     db.session.commit()
     
