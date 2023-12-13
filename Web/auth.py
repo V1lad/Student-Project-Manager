@@ -54,7 +54,7 @@ def sign_up():
         elif len(password1) < 7:
             flash("Пароль должен быть длиннее 7 символов", category="error")
         else:
-            new_user = User(email=email, firstName=firstName, password=password1, status="inactive")
+            new_user = User(email=email, firstName=firstName, password=password1)
 
             db.session.add(new_user)
             db.session.commit()

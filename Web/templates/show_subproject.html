@@ -5,9 +5,10 @@
 <ul class="list-group mt-5">
 {% for note in subproject.notes %}
     <li class="list-group-item">
+        
         <form method="POST">
             <div class="form-group">
-                <div {% if note.done %}style="text-decoration:line-through"{% endif %}><textarea
+                <div {% if note.done == "True" %}style="text-decoration:line-through"{% endif %}><textarea
                         type="text"
                         class="form-control border-0"
                         id="content"
@@ -19,18 +20,21 @@
                 <button type="submit" class="btn btn-outline-dark btn-sm">Сохранить</button>
             </div>
         </form>
-        <form method="POST">
-            <div class="form-group">
-                <input type="hidden" name="delete" value="{{ note.id }}" />
-                <button type="submit" class="btn btn-outline-dark btn-sm">Удалить</button>
-            </div>
-        </form>
-        <form method="POST">
+        <div class="btn-group" role="group" aria-label="Basic example">
+        <form method="POST" class = "mr-1">
             <div class="form-group">
                 <input type="hidden" name="complete" value="{{ note.id }}" />
                 <button type="submit" class="btn btn-outline-dark btn-sm">Выполнить</button>
             </div>
         </form>
+        <form method="POST" >
+            <div class="form-group">
+                <input type="hidden" name="delete" value="{{ note.id }}" />
+                <button type="submit" class="btn btn-outline-dark btn-sm">Удалить</button>
+            </div>
+        </form>
+        
+    </div>
     </li>
 {% endfor %}
 <li class="list-group-item">

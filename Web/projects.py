@@ -165,7 +165,7 @@ def showSubProject(index, subproject):
         subproject = SubProject.query.filter_by(id=subproject).first()
         
         if create_note:
-            note = Note(parent_id=subproject.id, content=content)
+            note = Note(parent_id=subproject.id, content=create_note, done="False")
             db.session.add(note)
             
         elif delete:
@@ -175,7 +175,10 @@ def showSubProject(index, subproject):
         elif complete:   
             note = Note.query.filter_by(id=int(complete)).first()
             print("09000", note.done)
-            note.done = True
+            if note.done == "True":
+                note.done = "False"
+            else:
+                note.done = "True"
             print("1111", note.done)
             
         elif content_id:

@@ -6,14 +6,14 @@ class User(db.Model, UserMixin):
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
     email = db.Column(db.String(150), unique=True)
-    firstName = db.Column(db.String(150))
+    firstName = db.Column(db.String(150), default='')
     password = db.Column(db.String(150))
-    status = db.Column(db.String(16))
-    ownedProjects = db.relationship('Project')
+    
     addedProjects = db.Column(db.JSON, default='[]')
 
+    ownedProjects = db.relationship('Project')
 
-class Project(db.Model, UserMixin):
+class Project(db.Model):
     __tablename__ = 'projects'
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
@@ -28,7 +28,7 @@ class Project(db.Model, UserMixin):
     allowedUsers = db.Column(db.JSON, default='[]')
     subprojects = db.relationship('SubProject')
     
-class SubProject(db.Model, UserMixin):
+class SubProject(db.Model):
     __tablename__ = 'subprojects'
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
@@ -37,11 +37,10 @@ class SubProject(db.Model, UserMixin):
     
     name = db.Column(db.String(150), default='')
     shortDescription = db.Column(db.String(255), default='')
-    content = db.Column(db.JSON, default='[]')
     
     notes = db.relationship('Note')
 
-class Note(db.Model, UserMixin):
+class Note(db.Model):
     __tablename__ = 'notes'
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
@@ -49,6 +48,5 @@ class Note(db.Model, UserMixin):
     parent_id = db.Column(db.Integer, db.ForeignKey('subprojects.id'))
     
     content = db.Column(db.String, default='')
-    type = db.Column(db.String, default='')
-    done = db.Column(db.Boolean, default=False)
+    done = db.Column(db.String, default="True")
     
