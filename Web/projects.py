@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from . import db
 from flask_login import login_required, current_user
-from .models import Project, User, SubProject
+from .models import Project, User, SubProject, Note
 import json
 
 projects = Blueprint('projects', __name__)
@@ -155,7 +155,15 @@ def redactSubProject(index, subproject):
 @login_required
 def showSubProject(index, subproject):
     if request.method == "POST":
+        content = request.form.get('create_note')
+        delete_word = request.form.get('delete')
+        
         project = Project.query.filter_by(id=index).first()
         subproject = SubProject.query.filter_by(id=subproject).first()
         
+        if content:
+            note = Note(parent_id=subproject.id, content=content)
+            db.session.add(note)
+        
+        db.session.commit()
         return render_template("show_subproject.html", project=project, user=current_user, subproject=subproject)

@@ -2,13 +2,35 @@
 
 {% block title %}Проект{% endblock %}
 {% block content %}
-
-{% for element in subproject.elements %}
+<ul class="list-group mt-5">
+{% for note in subproject.notes %}
+    <li class="list-group-item">
+        <form method="POST">
+            <div class="form-group">
+                <textarea
+                        type="text"
+                        class="form-control border-0"
+                        id="content"
+                        name="content"
+                >{{ note.content }}</textarea>
+                </br>
+                <button type="submit" class="btn btn-primary btn-sm">Применить изменения</button>
+            </div>
+        </form>
+    </li>
 {% endfor %}
+<li class="list-group-item">
+    <form action = {{ url_for('.showSubProject', index=project.id, subproject=subproject.id) }} method = "POST">
+        <input type="text" class="form-control mb-3 border-0" name="create_note" placeholder="Содержание записи" />
+        <button type="submit" class="btn btn-primary btn-sm">Создать запись</button>
+        <br/>
+    </form>
+</li>
+</ul>
 
 <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
     <input type="hidden" name="project" value="{{ project.id }}" />
-    <button type="submit" class="btn btn-primary">Вернутся к проекту</button>
+    <button type="submit" class="btn btn-primary mt-3">Вернутся к проекту</button>
     <br/>
 </form>
 
