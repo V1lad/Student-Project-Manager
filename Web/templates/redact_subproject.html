@@ -4,57 +4,55 @@
 {% block content %}
 
 <div class="container" id='sign-up-container'>
-    <div class="row pt-4 mt-4 mb-4">
-        <div class="col-8">
-<h1> Название проекта:   </h1>
-<form method="POST">
-    <div class="form-group">
-        <textarea
+<div class="row pt-4 mt-4 mb-4">
+<div class="col-8">
+    <h1> Название проекта:   </h1>
+    <form method="POST">
+        <div class="form-group">
+            <textarea
                 type="text"
                 class="form-control"
                 id="name"
                 name="name"
-        >{{ subproject.name }}</textarea>
-        </br>
-        <button type="submit" class="btn btn-primary">Применить изменения</button>
- </div>
-</form>
-<h2> Краткое описание проекта:   </h2>
-<form method="POST">
-    <div class="form-group">
-        <textarea
+                >{{ subproject.name }}</textarea>
+            </br>
+            <button type="submit" class="btn btn-primary">Применить изменения</button>
+        </div>
+    </form>
+    <h2> Краткое описание проекта:   </h2>
+    <form method="POST">
+        <div class="form-group">
+            <textarea
                 type="text"
                 class="form-control"
                 id="description"
                 name="description"
-        >{{ subproject.shortDescription }}</textarea>
-        </br>
-        <button type="submit" class="btn btn-primary">Применить изменения</button>
- </div>
-</form>
-
-
-<form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
+                >{{ subproject.shortDescription }}</textarea>
+            </br>
+            <button type="submit" class="btn btn-primary">Применить изменения</button>
+        </div>
+    </form>
+    <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
     <input type="hidden" name="project" value="{{ project.id }}" />
     <button type="submit" class="btn btn-primary">Вернутся к проекту</button>
     <br/>
-</form>
+    </form>
 </div>
 <div class="col-4">
-<h2> Удаление раздела   </h2>
-<form method="POST">
-    <div class="form-group">
-        <input
+    <h2> Удаление раздела   </h2>
+    <form method="POST">
+        <div class="form-group">
+            <input
                 type="text"
                 class="form-control"
                 id="delete"
                 name="delete"
                 placeholder="Введите УДАЛИТЬ чтобы удалить раздел"
-        ></input>
-        </br>
-        <button type="submit" class="btn btn-primary">Удалить раздел</button>
-    </div>
-</form>
+                ></input>
+            </br>
+            <button type="submit" class="btn btn-primary">Удалить раздел</button>
+        </div>
+    </form>
 </div>
 
 {% endblock %}

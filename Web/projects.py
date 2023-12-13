@@ -10,10 +10,7 @@ projects = Blueprint('projects', __name__)
 @login_required
 def allProjects():
     
-    #info = json.dumps({"KEY1":[1,2,3,4,5], "KEY2":3})
-    #project = Project(ownerId=current_user.id, name="test", allowedUsers = info, shortDescription = "1", fullDescription = "2")
     projects = Project.query.all()
-    
     
     return render_template("projects.html", user=current_user, available_projects = projects)
 
@@ -115,7 +112,6 @@ def showProject(index):
         
         # Предотвращаем повторное создание ПОКА НЕТ
         
-        [print(i.name) for i in subprojects]
         if to_create_subproject_name:
             subproject = SubProject(name = to_create_subproject_name, parent_id = project.id)
             db.session.add(subproject)
@@ -174,12 +170,12 @@ def showSubProject(index, subproject):
 
         elif complete:   
             note = Note.query.filter_by(id=int(complete)).first()
-            print("09000", note.done)
+
             if note.done == "True":
                 note.done = "False"
             else:
                 note.done = "True"
-            print("1111", note.done)
+
             
         elif content_id:
             note = Note.query.filter_by(id=int(content_id)).first()
