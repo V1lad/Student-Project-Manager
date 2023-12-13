@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from . import db
 from flask_login import login_required, current_user
 from .models import Project, User, SubProject, Note
+from .functions import has_access_to_note, has_access_to_project, has_access_to_subproject
 import json
 
 projects = Blueprint('projects', __name__)
@@ -10,14 +11,16 @@ projects = Blueprint('projects', __name__)
 @login_required
 def allProjects():
     
-    projects = Project.query.all()
+    projects = current_user.ownedProjects
     
     return render_template("projects.html", user=current_user, available_projects = projects)
 
 @projects.route('/projects/<int:index>/redact', methods=["POST"])
 @login_required
 def redactProject(index):
-    # Везде добавить проверку на то, что заходит владелец или человек с доступом! Функция HasAccess?
+    project = Project.query.filter_by(id=index).first()
+    if not has_access_to_project(user=current_user, project=project):
+        return redirect(url_for('allProjects'))
     name = request.form.get('name')
     shortDescription = request.form.get('shortDescription')
     fullDescription = request.form.get('fullDescription')
@@ -27,7 +30,7 @@ def redactProject(index):
     to_delete_user_id = request.form.get('to_delete_user_id')
     
     
-    project = Project.query.filter_by(id=index).first()
+    
     
     allowed_users_list = json.loads(project.allowedUsers)
     allowed_users = [User.query.filter_by(id=int(i)).first() for i in allowed_users_list]
