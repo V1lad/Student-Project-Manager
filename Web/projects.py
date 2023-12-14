@@ -141,8 +141,6 @@ def redactSubProject(index, subproject):
         delete_word = request.form.get('delete')
         
         
-    
-        
         subproject = SubProject.query.filter_by(id=subproject).first()
         
         if delete_word == "УДАЛИТЬ":
@@ -213,7 +211,13 @@ def showOtherProjects():
         saved_projects = [Project.query.filter_by(id=int(i)).first() for i in added_projects]
         
         if add_project_id:
-            project = Project.query.filter_by(id=int(add_project_id)).first()
+            try:
+                int_add_project_id = int(add_project_id)
+            except ValueError:
+                flash('Введён некорректный идентификтор')
+                return render_template("other_projects.html", user=current_user, available_projects = saved_projects)
+            
+            project = Project.query.filter_by(id=int(int_add_project_id)).first()
             if not project:
                 flash('Проекта с таким ID не существует')
             elif has_access_to_project(user=current_user, project=project):
@@ -227,7 +231,13 @@ def showOtherProjects():
                     
         elif delete_project_id:
             if delete_project_id in added_projects:
-                project = Project.query.filter_by(id=int(delete_project_id)).first()
+                try:
+                    int_delete_project_id = int(delete_project_id)
+                except ValueError:
+                    flash('Введён некорректный идентификтор')
+                    return render_template("other_projects.html", user=current_user, available_projects = saved_projects)
+                
+                project = Project.query.filter_by(id=int_delete_project_id).first()
                 added_projects.remove(delete_project_id)
                 saved_projects.remove(project)
         
