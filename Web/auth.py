@@ -15,11 +15,11 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user:
             if user.password == password:
-                flash('Вы успешно вошли в аккаунт!', category='success')
+                flash('Вы успешно вошли в аккаунт', category='success')
                 login_user(user, remember=True)
                 return redirect(url_for('views.home'))
             else:
-                flash('Incorrect password, try again.', category='error')
+                flash('Неверный пароль', category='error')
         else:
             flash('Аккаунта с такой почтой не существует', category='error')
 

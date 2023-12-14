@@ -200,8 +200,45 @@ def showSubProject(index, subproject):
         db.session.commit()
         return render_template("show_subproject.html", project=project, user=current_user, subproject=subproject)
     
-@projects.route('/other_projects', methods=["GET"])
+@projects.route('/other_projects', methods=["GET", "POST"])
 @login_required
 def showOtherProjects():
-    projects = Project.query.all()
-    return render_template("other_projects.html", user=current_user, available_projects = projects)
+    if request.method == "POST":
+        
+        delete_project_id = request.form.get('delete_project_id')
+        add_project_id = request.form.get('add_project')
+        
+        
+        added_projects = json.loads(current_user.addedProjects)
+        saved_projects = [Project.query.filter_by(id=int(i)).first() for i in added_projects]
+        
+        if add_project_id:
+            project = Project.query.filter_by(id=int(add_project_id)).first()
+            if not project:
+                flash('Проекта с таким ID не существует')
+            elif has_access_to_project(user=current_user, project=project):
+                if  project.owner_id == current_user.id:
+                    flash('Вы владелец этого проекта')
+                else:
+                    added_projects.append(add_project_id)
+                    saved_projects.append(project)
+            else:
+                flash('Доступ к запрашиваемому проекту запрещён')
+                    
+        elif delete_project_id:
+            if delete_project_id in added_projects:
+                project = Project.query.filter_by(id=int(delete_project_id)).first()
+                added_projects.remove(delete_project_id)
+                saved_projects.remove(project)
+        
+        current_user.addedProjects = json.dumps(added_projects)
+        db.session.commit()
+        return render_template("other_projects.html", user=current_user, available_projects = saved_projects)
+    
+    elif request.method == "GET":   
+        added_projects = json.loads(current_user.addedProjects)
+        saved_projects = [Project.query.filter_by(id=int(i)).first() for i in added_projects]
+    
+        db.session.commit()
+        return render_template("other_projects.html", user=current_user, available_projects = saved_projects)
+    

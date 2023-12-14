@@ -11,11 +11,26 @@
         {{ project.shortDescription}} </br>
         <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
         <input type="hidden" name="project" value="{{ project.id }}" />
-        <button  type="submit" class="btn btn-primary">Открыть</button>
+        <button  type="submit" class="btn btn-primary mt-2">Открыть</button>
+        <br/>
+        </form>
+        <form action = {{ url_for('.showOtherProjects', index=project.id) }} method = "POST">
+        <input type="hidden" name="delete_project_id" value="{{ project.id }}" />
+        <button  type="submit" class="btn btn-primary mt-2">Удалить из добавленных</button>
         <br/>
         </form>
     </li>
 </ul>
 {% endfor %}
-
+<form action = {{ url_for('.showOtherProjects') }} method = "POST">
+<label for = "add_project">Пароль</label>
+        <input
+            type="text"
+            class="form-control"
+            id="add_project"
+            name="add_project"
+            placeholder="Введите ID проекта"
+            />
+        <button type="submit" class="btn btn-primary mt-3">Добавить</button>
+</form>
 {% endblock %}
