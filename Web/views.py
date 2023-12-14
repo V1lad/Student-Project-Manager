@@ -4,12 +4,12 @@ from . import db
 
 views = Blueprint('views', __name__)
 
-# This is main page of an application.
+# Показывает главную страницу
 @views.route('/')
 def main_():
     return render_template("main.html", user=current_user)
 
-# This is user's personal page.
+# Показывает страницу с информацией об аккаунте
 @views.route('/home')
 @login_required
 def home():

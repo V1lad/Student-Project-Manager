@@ -7,6 +7,7 @@ import json
 
 projects = Blueprint('projects', __name__)
 
+# Показывает все ваши проекты
 @projects.route('/projects', methods=["GET"])
 @login_required
 def allProjects():
@@ -15,13 +16,17 @@ def allProjects():
     
     return render_template("projects.html", user=current_user, available_projects = projects)
 
+# Управляет функционалом по редакитированию информации о конкретном проекте
 @projects.route('/projects/<int:index>/redact', methods=["POST"])
 @login_required
 def redactProject(index):
     project = Project.query.filter_by(id=index).first()
+    
+    # Если у пользователя нет доступа - останавливаем дальнейшую работу
     if not has_access_to_project(user=current_user, project=project):
         return render_template("forbidden.html", user=current_user)
     
+    # Получение информации из запроса
     name = request.form.get('name')
     shortDescription = request.form.get('shortDescription')
     fullDescription = request.form.get('fullDescription')
@@ -30,16 +35,15 @@ def redactProject(index):
     user_id = request.form.get('user_id')
     to_delete_user_id = request.form.get('to_delete_user_id')
     
-    
-    
-    
+    # Получаем актуальную информацию из БД
     allowed_users_list = json.loads(project.allowedUsers)
     allowed_users = [User.query.filter_by(id=int(i)).first() for i in allowed_users_list]
     
+    # В случае некорректной информации останавливаем выполнение
     if not project:
         return redirect(url_for('allProjects'))
 
-
+    # Удаление проекта
     if delete_word == "УДАЛИТЬ":
         project.delete(db)
         db.session.commit()
@@ -57,9 +61,9 @@ def redactProject(index):
         allowed_users_list.remove(to_delete_user_id)
         project.allowedUsers = json.dumps(allowed_users_list)
         allowed_users.remove(User.query.filter_by(id=to_delete_user_id).first())
-        
+
+    # Добавление пользователей к проекту
     elif user_id:
-        # Надо сделать проверку на повторение и на существование пользователя
         user_to_add = User.query.filter_by(id=user_id).first()
         if not user_to_add:
             flash("Пользователь с таким ID не найден", category="error")
@@ -83,6 +87,7 @@ def redactProject(index):
     
     return render_template("redact_project.html", project=project, user=current_user, allowed_users=allowed_users)
 
+# Описывает создание проекта
 @projects.route('/new_project', methods=["GET", "POST"])
 @login_required
 def newProject():
@@ -93,7 +98,6 @@ def newProject():
         name = request.form.get('name')
         shortDescription = request.form.get('shortDescription')
 
-        # Надо добавить OwnerID
         new_project = Project(name=name, shortDescription=shortDescription, owner_id=current_user.id)
         
         db.session.add(new_project)
@@ -101,6 +105,7 @@ def newProject():
         
         return redirect(url_for('projects.allProjects'))
 
+# Описывает логику просмотра проекта
 @projects.route('/projects/<int:index>', methods=["POST"])
 @login_required
 def showProject(index):
@@ -115,17 +120,15 @@ def showProject(index):
         
         subprojects = project.subprojects
         
-        # Предотвращаем повторное создание ПОКА НЕТ
-        
         if to_create_subproject_name:
             subproject = SubProject(name = to_create_subproject_name, parent_id = project.id)
             db.session.add(subproject)
             subprojects.append(subproject)
-
-        
+            
         db.session.commit()
         return render_template("show_project.html", project=project, user=current_user, subprojects=subprojects)
 
+# Описывает редактирования раздела
 @projects.route('/projects/<int:index>/<int:subproject>/redact', methods=["POST"])
 @login_required
 def redactSubProject(index, subproject):
@@ -139,7 +142,6 @@ def redactSubProject(index, subproject):
         name = request.form.get('name')
         description = request.form.get('description')
         delete_word = request.form.get('delete')
-        
         
         subproject = SubProject.query.filter_by(id=subproject).first()
         

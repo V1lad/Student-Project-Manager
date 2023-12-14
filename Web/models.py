@@ -1,6 +1,7 @@
 from . import db
 from flask_login import UserMixin
 
+# Описывает сущность пользователь
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
@@ -13,6 +14,7 @@ class User(db.Model, UserMixin):
 
     ownedProjects = db.relationship('Project')
 
+# Описывает сущность проект
 class Project(db.Model):
     __tablename__ = 'projects'
 
@@ -28,12 +30,13 @@ class Project(db.Model):
     allowedUsers = db.Column(db.JSON, default='[]')
     subprojects = db.relationship('SubProject')
     
+    # Корректно удаляет проект и его элементы
     def delete(self, db):
         for subproject in self.subprojects:
             subproject.delete(db)
         db.session.delete(self)
         
-
+# Описывает сущность раздел
 class SubProject(db.Model):
     __tablename__ = 'subprojects'
 
@@ -46,12 +49,13 @@ class SubProject(db.Model):
     
     notes = db.relationship('Note')
     
+    # Корректно раздел и его элементы
     def delete(self, db):
         for note in self.notes:
             note.delete(db)
         db.session.delete(self)
         
-
+# Описывает сущность запись
 class Note(db.Model):
     __tablename__ = 'notes'
 
@@ -62,6 +66,7 @@ class Note(db.Model):
     content = db.Column(db.String, default='')
     done = db.Column(db.String, default="True")
     
+     # Корректно удаляет запись
     def delete(self, db):
         db.session.delete(self)
     
