@@ -2,7 +2,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
-from flask_authorize import Authorize
 from json import loads
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -37,7 +36,6 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    authorize = Authorize(app)
 
     @login_manager.user_loader
     def load_user(id):
