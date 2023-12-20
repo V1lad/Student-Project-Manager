@@ -58,7 +58,9 @@
             <button type="submit" class="btn btn-primary">Применить изменения</button>
         </div>
     </form>
-    <form action = {{ url_for('.showProject', index=project.id) }} method = "POST">
+    
+
+    <form class = "mt-2" action = {{ url_for('.showProject', index=project.id) }} method = "POST">
     <input type="hidden" name="project" value="{{ project.id }}" />
     <button type="submit" class="btn btn-primary">Вернутся к проекту</button>
     <br/>
@@ -79,7 +81,13 @@
             <button type="submit" class="btn btn-primary">Удалить проект</button>
         </div>
     </form>
-    <h2> Добавление и удаления соучастников   </h2>
+    <h2> Статус проекта:   </h2>
+    <form method = "POST">
+    <input type="hidden" name="done" value="{{ project.id }}" />
+    <button type="submit" class="btn btn-primary">Изменить статус проекта</button>
+    <br/>
+    </form>
+    <h2 class="mt-2"> Добавление и удаления соучастников   </h2>
     <ul class="list-group">
         <div class="form-group">
             {% for allowed_user in allowed_users %}

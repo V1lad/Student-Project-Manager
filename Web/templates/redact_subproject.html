@@ -53,6 +53,12 @@
             <button type="submit" class="btn btn-primary">Удалить раздел</button>
         </div>
     </form>
+    <h2> Статус раздела:   </h2>
+    <form method = "POST">
+    <input type="hidden" name="done" value="{{ subproject.id }}" />
+    <button type="submit" class="btn btn-primary">Изменить статус раздела</button>
+    <br/>
+    </form>
 </div>
 
 {% endblock %}

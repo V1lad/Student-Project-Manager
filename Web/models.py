@@ -26,7 +26,7 @@ class Project(db.Model):
     shortDescription = db.Column(db.String(255), default='')
     fullDescription = db.Column(db.String(255), default='')
     goal = db.Column(db.String(255), default='')
-    done = db.Column(db.String, default="True")
+    done = db.Column(db.String, default="False")
     
     allowedUsers = db.Column(db.JSON, default='[]')
     subprojects = db.relationship('SubProject')
@@ -47,7 +47,7 @@ class SubProject(db.Model):
     
     name = db.Column(db.String(150), default='')
     shortDescription = db.Column(db.String(255), default='')
-    done = db.Column(db.String, default="True")
+    done = db.Column(db.String, default="False")
     
     notes = db.relationship('Note')
     
@@ -66,7 +66,7 @@ class Note(db.Model):
     parent_id = db.Column(db.Integer, db.ForeignKey('subprojects.id'))
     
     content = db.Column(db.String, default='')
-    done = db.Column(db.String, default="True")
+    done = db.Column(db.String, default="False")
     
      # Корректно удаляет запись
     def delete(self, db):
