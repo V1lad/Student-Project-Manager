@@ -26,6 +26,7 @@ class Project(db.Model):
     shortDescription = db.Column(db.String(255), default='')
     fullDescription = db.Column(db.String(255), default='')
     goal = db.Column(db.String(255), default='')
+    done = db.Column(db.String, default="True")
     
     allowedUsers = db.Column(db.JSON, default='[]')
     subprojects = db.relationship('SubProject')
@@ -46,6 +47,7 @@ class SubProject(db.Model):
     
     name = db.Column(db.String(150), default='')
     shortDescription = db.Column(db.String(255), default='')
+    done = db.Column(db.String, default="True")
     
     notes = db.relationship('Note')
     
