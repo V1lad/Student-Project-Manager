@@ -81,7 +81,7 @@
             <button type="submit" class="btn btn-primary">Удалить проект</button>
         </div>
     </form>
-    <h2> Статус проекта:   </h2>
+    <h2> Статус проекта:  {%if project.done == "True" %}выполнен{%else%}активный{%endif%} </h2>
     <form method = "POST">
     <input type="hidden" name="done" value="{{ project.id }}" />
     <button type="submit" class="btn btn-primary">Изменить статус проекта</button>

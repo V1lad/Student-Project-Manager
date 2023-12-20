@@ -34,6 +34,7 @@ def redactProject(index):
     delete_word = request.form.get('delete')
     user_id = request.form.get('user_id')
     to_delete_user_id = request.form.get('to_delete_user_id')
+    is_project_done_id = request.form.get('done')
     
     # Получаем актуальную информацию из БД
     allowed_users_list = json.loads(project.allowedUsers)
@@ -61,7 +62,15 @@ def redactProject(index):
         allowed_users_list.remove(to_delete_user_id)
         project.allowedUsers = json.dumps(allowed_users_list)
         allowed_users.remove(User.query.filter_by(id=to_delete_user_id).first())
-
+        
+    # Изменение состояния проекта
+    elif is_project_done_id:
+        if project.done == "True":
+            project.done = "False"
+        else:
+            project.done = "True"
+            
+            
     # Добавление пользователей к проекту
     elif user_id:
         user_to_add = User.query.filter_by(id=user_id).first()
@@ -142,6 +151,7 @@ def redactSubProject(index, subproject):
         name = request.form.get('name')
         description = request.form.get('description')
         delete_word = request.form.get('delete')
+        is_subproject_done_id = request.form.get('done')
         
         subproject = SubProject.query.filter_by(id=subproject).first()
         
@@ -155,6 +165,12 @@ def redactSubProject(index, subproject):
         elif description:
             subproject.shortDescription = description
 
+        if is_subproject_done_id:
+            if subproject.done == "True":
+                subproject.done = "False"
+            else:
+                subproject.done = "True"
+            
         db.session.commit()    
         return render_template("redact_subproject.html", project=project, user=current_user, subproject=subproject)
     

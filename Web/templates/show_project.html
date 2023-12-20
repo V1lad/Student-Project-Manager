@@ -20,7 +20,7 @@
 <ul class="list-group">
 {% for subproject in subprojects %}
 <div class="list-group-item">
-    <h3>{{subproject.name}}</h3>
+    <h3><span {% if subproject.done == "True" %} style="text-decoration:line-through" {% endif %}> {{subproject.name}}</span>{% if subproject.done == "True" %} - Выполнен{% endif %}</h3>
     <p>{{subproject.shortDescription}}</p>
     <form action = {{ url_for('.showSubProject', index=project.id, subproject=subproject.id) }} method = "POST">
     <input type="hidden" name="to_redact_subproject_id" value="{{ subproject.id }}" />
