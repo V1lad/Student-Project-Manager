@@ -241,6 +241,8 @@ def showOtherProjects():
             elif has_access_to_project(user=current_user, project=project):
                 if  project.owner_id == current_user.id:
                     flash('Вы владелец этого проекта')
+                elif add_project_id in added_projects:
+                    flash('Вы уже сохранили данный проект')
                 else:
                     added_projects.append(add_project_id)
                     saved_projects.append(project)
