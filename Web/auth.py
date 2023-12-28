@@ -46,9 +46,9 @@ def sign_up():
         if user:
             flash('Аккаунт с такой почтой уже существует', category='error')
         elif len(email) < 4:
-            flash("Потчовый адрес должен быть длиннее 4 символов", category="error")
+            flash("Почтовый адрес должен быть длиннее 4 символов", category="error")
         elif len(firstName) < 2:
-            flash("Имя должно состоять более чем из одного символа", category="error")
+            flash("Имя должно состоять хотя бы из одного символа", category="error")
         elif password1 != password2:
             flash("Пароли не совпадают", category="error")
         elif len(password1) < 7:
