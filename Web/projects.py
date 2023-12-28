@@ -5,6 +5,7 @@ from .models import Project, User, SubProject, Note
 from .functions import has_access_to_project
 import json
 
+DB_MAX_INT = 10000000000000000
 projects = Blueprint('projects', __name__)
 
 # Показывает все ваши проекты
@@ -215,60 +216,86 @@ def showSubProject(index, subproject):
             
         db.session.commit()
         return render_template("show_subproject.html", project=project, user=current_user, subproject=subproject)
-    
+
+# Обрабатывает запросы по адресу /other_projects с методами Get и Post 
 @projects.route('/other_projects', methods=["GET", "POST"])
 @login_required
 def showOtherProjects():
+    # Управялет логикой сохранения проектов других пользователей
+    # Только аутентифицированный пользователь имеет доступ к функционалу данной подпрограммы
+    # Метод POST подаётся при нажатии на кнопку
     if request.method == "POST":
         
+        # Получаем значвения ID проекта из форм страницы
         delete_project_id = request.form.get('delete_project_id')
         add_project_id = request.form.get('add_project')
         
-        
+        # Загружаем из БД уже добавленные пользователем проекты
         added_projects = json.loads(current_user.addedProjects)
         saved_projects = [Project.query.filter_by(id=int(i)).first() for i in added_projects]
         
+        # Если добавляем проект
         if add_project_id:
+            # Проверяем на корректный ввод числа
             try:
                 int_add_project_id = int(add_project_id)
             except ValueError:
+                # Иначе выводим ошибку и возвращаем страницу без изменений
                 flash('Введён некорректный идентификтор')
                 return render_template("other_projects.html", user=current_user, available_projects = saved_projects)
+            # Проверяем на переполнение целого числа в БД
+            if int_add_project_id >= DB_MAX_INT:
+                flash('Слишком большой номер проекта')
+                return render_template("other_projects.html", user=current_user, available_projects = saved_projects)
             
+            # Введённые данные корректны, пытаемся запросить нужный проект
             project = Project.query.filter_by(id=int(int_add_project_id)).first()
             if not project:
                 flash('Проекта с таким ID не существует')
+            # Проект существует, проверяем есть ли доступ
             elif has_access_to_project(user=current_user, project=project):
                 if  project.owner_id == current_user.id:
                     flash('Вы владелец этого проекта')
                 elif add_project_id in added_projects:
                     flash('Вы уже сохранили данный проект')
                 else:
+                    # Долбавляем проект в сохранённые у пользователя
                     added_projects.append(add_project_id)
                     saved_projects.append(project)
             else:
                 flash('Доступ к запрашиваемому проекту запрещён')
-                    
+                
+        # Удаление проекта из добавленных           
         elif delete_project_id:
             if delete_project_id in added_projects:
+                # Проверяем на корректный ввод числа
                 try:
                     int_delete_project_id = int(delete_project_id)
                 except ValueError:
                     flash('Введён некорректный идентификтор')
                     return render_template("other_projects.html", user=current_user, available_projects = saved_projects)
+                if int_delete_project_id >= DB_MAX_INT:
+                    flash('Слишком большой номер проекта')
+                    return render_template("other_projects.html", user=current_user, available_projects = saved_projects)
                 
+                # Введённые данные корректны, удаляем введённый проект
                 project = Project.query.filter_by(id=int_delete_project_id).first()
                 added_projects.remove(delete_project_id)
                 saved_projects.remove(project)
         
+        # Сохраняем проект в поля пользователя  
         current_user.addedProjects = json.dumps(added_projects)
+        # Сохраняем изменения в БД
         db.session.commit()
         return render_template("other_projects.html", user=current_user, available_projects = saved_projects)
     
+    # При переходе по адресу
     elif request.method == "GET":   
+        # При переходе по адресу
+        # Загружаем из БД уже добавленные пользователем проекты
         added_projects = json.loads(current_user.addedProjects)
         saved_projects = [Project.query.filter_by(id=int(i)).first() for i in added_projects]
-    
-        db.session.commit()
+        
+        # Отображаем страницу
         return render_template("other_projects.html", user=current_user, available_projects = saved_projects)
     
